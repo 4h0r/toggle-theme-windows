@@ -1,0 +1,23 @@
+{
+    "name": "ToggleTheme C# Dev",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
+    "features": {
+        "ghcr.io/devcontainers/features/dotnet:1": {
+            "version": "7.0"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "omnisharp.useModernNet": true
+            },
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "ms-dotnettools.csdevkit",
+                "ms-vscode.powershell"
+            ]
+        }
+    },
+    "postCreateCommand": "echo 'Note: This is a Windows-specific project. Building requires Windows with MSBuild.'",
+    "remoteUser": "vscode"
+}
