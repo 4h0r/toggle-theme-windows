@@ -11,23 +11,35 @@ namespace ToggleTheme
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Console.WriteLine("=== Application Starting ===");
             base.OnStartup(e);
 
-            // Get the main window reference
-            _mainWindow = Current.MainWindow as MainWindow;
+            // Create the main window explicitly
+            _mainWindow = new MainWindow();
+            Console.WriteLine($"MainWindow created: {(_mainWindow != null ? "OK" : "NULL")}");
 
             // Create system tray icon
             _trayIcon = new NotifyIcon();
             _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             _trayIcon.Visible = true;
             _trayIcon.Text = "Toggle Theme - Click to toggle Light/Dark mode";
+            Console.WriteLine("Tray icon created and visible");
 
             // Handle left-click to toggle theme
             _trayIcon.Click += (s, args) =>
             {
+                Console.WriteLine($"Tray icon clicked! Button: {(args as MouseEventArgs)?.Button}");
                 if (args is MouseEventArgs mouseArgs && mouseArgs.Button == MouseButtons.Left)
                 {
-                    _mainWindow?.ToggleTheme();
+                    Console.WriteLine("Left click detected, calling ToggleTheme()");
+                    if (_mainWindow != null)
+                    {
+                        _mainWindow.ToggleTheme();
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR: MainWindow is null!");
+                    }
                 }
             };
 
@@ -35,7 +47,18 @@ namespace ToggleTheme
             var menu = new ContextMenuStrip();
 
             var toggleItem = new ToolStripMenuItem("Toggle Theme");
-            toggleItem.Click += (s, a) => _mainWindow?.ToggleTheme();
+            toggleItem.Click += (s, a) =>
+            {
+                Console.WriteLine("Context menu 'Toggle Theme' clicked");
+                if (_mainWindow != null)
+                {
+                    _mainWindow.ToggleTheme();
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: MainWindow is null!");
+                }
+            };
             menu.Items.Add(toggleItem);
 
             menu.Items.Add(new ToolStripSeparator());
@@ -45,6 +68,7 @@ namespace ToggleTheme
             menu.Items.Add(exitItem);
 
             _trayIcon.ContextMenuStrip = menu;
+            Console.WriteLine("Application startup complete");
         }
 
         private void ExitApplication()
