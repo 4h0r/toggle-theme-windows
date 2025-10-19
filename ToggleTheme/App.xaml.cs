@@ -1,6 +1,9 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace ToggleTheme
 {
@@ -23,10 +26,12 @@ namespace ToggleTheme
 
             // Create system tray icon
             _trayIcon = new NotifyIcon();
-            _trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             _trayIcon.Visible = true;
             _trayIcon.Text = "Toggle Theme - Click to toggle Light/Dark mode";
             Console.WriteLine("Tray icon created and visible");
+            
+            // Set initial icon based on current theme
+            UpdateTrayIcon();
 
             // Handle left-click to toggle theme
             _trayIcon.Click += (s, args) =>
@@ -38,6 +43,7 @@ namespace ToggleTheme
                     if (_mainWindow != null)
                     {
                         _mainWindow.ToggleTheme();
+                        UpdateTrayIcon();
                     }
                     else
                     {
@@ -56,6 +62,7 @@ namespace ToggleTheme
                 if (_mainWindow != null)
                 {
                     _mainWindow.ToggleTheme();
+                    UpdateTrayIcon();
                 }
                 else
                 {
@@ -85,6 +92,84 @@ namespace ToggleTheme
         {
             _trayIcon?.Dispose();
             base.OnExit(e);
+        }
+
+        private System.Drawing.Icon LoadIconFromResource(string resourceName)
+        {
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var fullResourceName = $"ToggleTheme.Resources.{resourceName}";
+                
+                using (Stream stream = assembly.GetManifestResourceStream(fullResourceName))
+                {
+                    if (stream != null)
+                    {
+                        return new System.Drawing.Icon(stream);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"ERROR: Could not find resource: {fullResourceName}");
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR loading icon from resource: {ex.Message}");
+                return null;
+            }
+        }
+
+        public void UpdateTrayIcon()
+        {
+            try
+            {
+                // Read current theme: 1 = Light, 0 = Dark
+                int currentTheme = GetCurrentTheme();
+                
+                // Light mode (1) = use dark icon, Dark mode (0) = use light icon
+                string iconName = currentTheme == 1 ? "dark.ico" : "light.ico";
+                Console.WriteLine($"Updating tray icon to: {iconName} (theme value: {currentTheme})");
+                
+                var newIcon = LoadIconFromResource(iconName);
+                if (newIcon != null)
+                {
+                    _trayIcon.Icon = newIcon;
+                    Console.WriteLine("Tray icon updated successfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR updating tray icon: {ex.Message}");
+            }
+        }
+
+        private int GetCurrentTheme()
+        {
+            const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+            const string AppsUseLightThemeValue = "AppsUseLightTheme";
+            
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
+                {
+                    if (key != null)
+                    {
+                        object value = key.GetValue(AppsUseLightThemeValue);
+                        if (value != null)
+                        {
+                            return Convert.ToInt32(value);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR reading theme: {ex.Message}");
+            }
+            
+            return 1; // Default to light theme
         }
     }
 }

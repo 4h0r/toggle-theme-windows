@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\icons8-moon-96.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\dark.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
@@ -101,7 +101,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-moon-96.ico" />
+    <EmbeddedResource Include="Resources\dark.ico" />
+    <EmbeddedResource Include="Resources\light.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
