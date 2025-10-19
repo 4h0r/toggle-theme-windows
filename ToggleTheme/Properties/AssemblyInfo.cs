@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 
 [assembly: AssemblyTitle("ToggleTheme")]
-[assembly: AssemblyDescription("Toggle between Windows Light and Dark mode")]
+[assembly: AssemblyDescription("Toggle between Windows Light and Dark mode - A legitimate system theme switcher")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ToggleTheme")]
-[assembly: AssemblyCopyright("Copyright © 2025")]
+[assembly: AssemblyCompany("Open Source")]
+[assembly: AssemblyProduct("ToggleTheme - Windows Theme Switcher")]
+[assembly: AssemblyCopyright("Copyright © 2025 - Open Source Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

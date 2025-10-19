@@ -51,16 +51,12 @@ namespace ToggleTheme
                 // Apply new theme
                 SetTheme(newTheme);
 
-                // Show notification
-                string themeName = newTheme == 1 ? "Light Mode" : "Dark Mode";
-                ShowNotification($"Switched to {themeName}");
                 Console.WriteLine($"Theme toggle completed successfully");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"ERROR in ToggleTheme: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
-                ShowNotification($"Error: {ex.Message}");
                 Debug.WriteLine($"Theme toggle error: {ex}");
             }
         }
@@ -184,21 +180,11 @@ namespace ToggleTheme
             try
             {
                 var app = System.Windows.Application.Current as App;
-                if (app != null)
+                if (app != null && app.TrayIcon != null)
                 {
-                    // Access the tray icon through reflection since it's private
-                    var trayIconField = app.GetType().GetField("_trayIcon", 
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    
-                    if (trayIconField != null)
-                    {
-                        var trayIcon = trayIconField.GetValue(app) as System.Windows.Forms.NotifyIcon;
-                        if (trayIcon != null)
-                        {
-                            trayIcon.ShowBalloonTip(2000, "Toggle Theme", message, 
-                                System.Windows.Forms.ToolTipIcon.Info);
-                        }
-                    }
+                    // Access tray icon through public property (no reflection needed)
+                    app.TrayIcon.ShowBalloonTip(2000, "Toggle Theme", message, 
+                        System.Windows.Forms.ToolTipIcon.Info);
                 }
             }
             catch (Exception ex)

@@ -9,6 +9,9 @@ namespace ToggleTheme
         private NotifyIcon _trayIcon;
         private MainWindow _mainWindow;
 
+        // Public property to access tray icon without reflection
+        public NotifyIcon TrayIcon => _trayIcon;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             Console.WriteLine("=== Application Starting ===");
