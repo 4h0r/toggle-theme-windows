@@ -2,7 +2,7 @@
 
 A simple Windows taskbar application to toggle between Light Mode and Dark Mode with a single click.
 
-> 🖥️ [Download ToggleTheme.exe](https://github.com/4h0r/toggle-theme-windows/releases/latest/download/ToggleTheme.exe)
+> [Download ToggleTheme.exe](https://github.com/thor-computer/toggle-theme-windows/releases/latest/download/ToggleTheme.exe)
 
 ![](gif.gif)
 
